@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+/* =========================================================
+   Design tokens — 蓝绿 / 青 (teal-cyan) palette
+   Light: cream canvas + deep teal ink
+   Dark : near-black teal canvas + mint ink
+   ========================================================= */
+@theme {
+  --color-canvas: #f0faf7;
+  --color-canvas-2: #e2f3ec;
+  --color-ink: #0c3933;
+  --color-ink-soft: #1a4f48;
+  --color-muted: #4f8079;
+  --color-accent: #0d9488;
+  --color-line: #c7e3da;
+  --color-glow: #5eead4;
+
+  --font-display: "Fraunces", "Noto Serif SC", "Songti SC", "STSong", ui-serif, serif;
+  --font-serif: "Noto Serif SC", "Songti SC", "STSong", ui-serif, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Auto dark mode — pure OS preference, no toggle */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-canvas: #021c1a;
+    --color-canvas-2: #042f2c;
+    --color-ink: #d1faf0;
+    --color-ink-soft: #a7f3d0;
+    --color-muted: #6dbab1;
+    --color-accent: #2dd4bf;
+    --color-line: #0a3833;
+    --color-glow: #5eead4;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "kern";
+  transition: background-color 700ms ease, color 700ms ease;
+}
+
+.bg-canvas,
+.text-ink,
+.text-muted,
+.text-accent,
+.border-line,
+.text-ink-soft {
+  transition: background-color 700ms ease, color 700ms ease, border-color 700ms ease, fill 700ms ease,
+    stroke 700ms ease;
+}
+
+/* =========================================================
+   Atmosphere — soft radial mesh + fine grain
+   ========================================================= */
+.atmosphere {
+  position: relative;
+  isolation: isolate;
+  background: radial-gradient(ellipse 80% 60% at 20% 10%, var(--color-canvas-2) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, var(--color-canvas-2) 0%, transparent 55%),
+    var(--color-canvas);
+}
+.atmosphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.2 0 0 0 0 0.18 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+@media (prefers-color-scheme: dark) {
+  .atmosphere::after {
+    opacity: 0.5;
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.18 0 0 0 0 0.85 0 0 0 0 0.75 0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+}
+
+/* =========================================================
+   Typography
+   ========================================================= */
+.font-display {
+  font-family: var(--font-display);
+  font-feature-settings: "ss01", "kern", "liga", "calt";
+}
+.label-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   Animations
+   ========================================================= */
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+@keyframes halo {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0px var(--color-glow));
+  }
+  50% {
+    filter: drop-shadow(0 0 18px var(--color-glow));
+  }
+}
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.rise-1 {
+  animation: rise 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 80ms backwards;
+}
+.rise-2 {
+  animation: rise 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) 220ms backwards;
+}
+.rise-3 {
+  animation: rise 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) 480ms backwards;
+}
+
+.emoji-float {
+  display: inline-block;
+  animation: drift 6s ease-in-out infinite, halo 4s ease-in-out infinite;
+  will-change: transform, filter;
+}
+
+.pulse-dot {
+  animation: pulseDot 2.4s ease-in-out infinite;
+}
+
+/* Hairline divider that picks up the theme */
+.rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--color-line) 18%,
+    var(--color-line) 82%,
+    transparent 100%
+  );
+}
+
+/* Vertical accent line */
+.vrule {
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--color-line) 25%,
+    var(--color-line) 75%,
+    transparent 100%
+  );
+}
+
+/* Selection */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-canvas);
+}
